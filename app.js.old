@@ -1,0 +1,38 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+let todos = [];
+
+app.get('/', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Todo App</title>
+      </head>
+      <body>
+        <h1>Todo List</h1>
+        <ul>
+          ${todos.map(todo => `<li>${todo}</li>`).join('')}
+        </ul>
+        <form action="/add" method="post">
+          <input type="text" name="todo" placeholder="Enter a new todo">
+          <button type="submit">Add</button>
+        </form>
+      </body>
+    </html>
+  `);
+});
+
+app.post('/add', (req, res) => {
+  const todo = req.body.todo;
+  todos.push(todo);
+  res.redirect('/');
+});
+
+app.listen(3000, () => {
+  console.log('Todo app listening on port 3000!');
+});
